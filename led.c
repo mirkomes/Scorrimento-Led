@@ -74,10 +74,10 @@ void led_main(void)
 	      else
 		    j = (j==0) ? 7 : j - 1;
 	      
-	      for (i = 0; i < 1000*70; i++)
+	      for (i = 0; i < 1000*60; i++)
 	      {
 		    //durante il tempo porto di attesa chiamo la funzione polling per verificarne lo stato
-		    direzione = polling();
+		    direzione = (polling()) ? !direzione : direzione ;
 	      }
         }
 }

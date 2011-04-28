@@ -4,5 +4,5 @@ int polling(void)
 {
         uint32_t valore = *(volatile uint32_t *)0x50020800;
         
-        return (int) valore;
+        return !((int) valore);
 }
