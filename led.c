@@ -3,7 +3,7 @@
 void led_main(void)
 {
         volatile int i;
-        int j = 0;
+        int j = 0, direzione = 0;
         
         //scorrimento dei led usando indirizzi cablati
         
@@ -63,9 +63,16 @@ void led_main(void)
 			  break;
 	      }
 	      
-	      j = (j==7) ? 0 : j+1;
+	      //decido la direzione di scorrimento dei led
+	      direzione = (j==7) ? 1 : direzione;
+	      direzione = (j==0) ? 0 : direzione;
 	      
-	      for (i = 0; i < 1000*250; i++)
+	      if (!direzione)
+	      	    j = (j<7) ? j+1 : j;
+	      else
+		    j = (j>0) ? j-1 : j;
+	      
+	      for (i = 0; i < 1000*100; i++)
 	      {
 		    
 	      }
