@@ -14,11 +14,24 @@ STRIP           = $(CROSS_COMPILE)strip
 OBJCOPY         = $(CROSS_COMPILE)objcopy
 OBJDUMP         = $(CROSS_COMPILE)objdump
 
-OBJ = led.o
-EXE = led
-BIN = led.bin
+all: led.bin checksum
 
-all: $(BIN)
+led.bin: led checksum
+	$(OBJCOPY) -O binary led $@
+	./checksum/fix-checksum $@
 
-$(EXE): $(OBJ)
-	$(LD) 
+checksum:
+	$(MAKE) -C checksum
+
+led: led.o boot.o vectors.o
+	$(LD) $(LDFLAGS) linker.lds $^ -o $@
+
+.PHONY: all
+
+led.bin: led checksum
+
+clean:
+	rm -f led *.o led.bin
+	$(MAKE) -C checksum clean
+
+.PHONY: checksum clean
