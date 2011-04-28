@@ -23,7 +23,7 @@ led.bin: led checksum
 checksum:
 	$(MAKE) -C checksum
 
-led: led.o boot.o vectors.o
+led: led.o boot.o vectors.o polling_BUT1.o
 	$(LD) $(LDFLAGS) linker.lds $^ -o $@
 
 .PHONY: all

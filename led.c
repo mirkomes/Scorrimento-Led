@@ -2,17 +2,23 @@
 
 void led_main(void)
 {
-        volatile int i;
-        int j = 0, direzione = 0;
+        int j = 7, i;
+        int direzione = 1;
         
         //scorrimento dei led usando indirizzi cablati
         
         //programmo la porta 3 in uscita
         *(volatile uint32_t *)0x50038000 = 0x0f;
         
-        //programmo la porta 2 in uscita
+        //programmo la porta 2 in uscita (pin 4, 5, 6, 7)
+        
+        //il pulsante 1 "BUT1" è collegato alla PIO2_9
+        //devo abilitare il pin 9 della porta 2 in ingresso
+        
         uint32_t reg = *(volatile uint32_t *)0x50028000;
-        reg |= 0xf0;
+        
+        reg |= 0x0f0; //porte dei led in uscita e porta del BUT1 in ingresso
+        
         *(volatile uint32_t *)0x50028000 = reg;
         
         while(1)
@@ -62,19 +68,16 @@ void led_main(void)
 		    default:
 			  break;
 	      }
-	      
-	      //decido la direzione di scorrimento dei led
-	      direzione = (j==7) ? 1 : direzione;
-	      direzione = (j==0) ? 0 : direzione;
-	      
+	      	      
 	      if (!direzione)
-	      	    j = (j<7) ? j+1 : j;
+	      	    j = (j==7) ? 0 : j + 1;
 	      else
-		    j = (j>0) ? j-1 : j;
+		    j = (j==0) ? 7 : j - 1;
 	      
-	      for (i = 0; i < 1000*100; i++)
+	      for (i = 0; i < 1000*70; i++)
 	      {
-		    
+		    //durante il tempo porto di attesa chiamo la funzione polling per verificarne lo stato
+		    direzione = polling();
 	      }
         }
 }
